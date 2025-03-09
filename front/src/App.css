@@ -1,0 +1,481 @@
+/* App.css */
+
+/* Reset body margin and padding */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 350px;
+  background-color: #c98013; /* Orange background for the sidebar */
+  height: calc(100vh - 20px); /* Adjust height for margin */
+  margin-right: 10px;
+  margin: 10px;
+  margin-left: 0.5px;
+  margin-top: 0.5px;
+   /* Add margin around the sidebar */
+  position: fixed; /* Keep the sidebar fixed */
+  top: 10px; /* Adjust for top margin */
+  right: 10px; /* Adjust for right margin */
+  z-index: 100; /* Ensure it stays on top */
+  overflow-y: auto; /* Enable scrolling for sidebar if needed */
+  padding-left: 10px;
+  /* Optional: Add a shadow for better visibility */
+}
+
+
+
+/* Logo Section with Blue Background */
+.sidebar .logo-container {
+  background-color: #00b4d8; /* Blue background for the logo area */
+  padding: 0px;
+  text-align: center;
+  margin-bottom: 10px;
+  margin-left: 0.5px; /* Space below the logo area */
+}
+
+/* Styling for Logo Image */
+.sidebar .logo-container img {
+  width: 60px;
+  height: auto;
+}
+
+/* Menu Styling */
+.sidebar ul {
+  padding-left: 0;
+}
+
+.sidebar ul li {
+  list-style: none;
+  margin-bottom: 15px;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Main Container - Flexbox Layout */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  margin-left: 260px; /* Offset content to make room for the sidebar */
+}
+
+/* Main Content Area */
+.content-area {
+  flex-grow: 1;
+  background-color: #f0f0f0; /* Light background for content */
+  height: 100%; /* Full height for content area */
+  padding: 2px;
+  overflow-y: auto;
+  margin-top: 60px; /* Create space for the fixed top section */
+}
+
+/* Blue Background for the Top Section */
+
+
+.welcome-section {
+  background-color: #00b4d8; /* Blue background for the top section */
+  color: white;
+  padding: 0px 0;
+  text-align: center;
+  margin-top: 0;
+  position: fixed;
+  top: 0;
+  left: 260px; /* Offset the welcome section to the right of the sidebar */
+  width: calc(100% - 260px); /* Make the width span the remaining space */
+  z-index: 101; /* Ensure it's on top of the content */
+   /* Optional: Add some shadow for floating effect */
+}
+
+/* Button Styling */
+.btn-orange {
+  background-color: #FFA500; /* Example orange color */
+  color: white;
+  height: 7vh; /* Button height */
+}
+
+.btn-orange:hover {
+  background-color: #e59400; /* Darker orange on hover */
+}
+
+.logo-image {
+  width: 60px;
+  height: auto;
+  margin: 0;
+  padding-left: 10px;
+  margin: -10px auto 20px auto;
+}
+
+/* Styling for the submenu */
+.submenu {
+  padding-left: 20px;
+  margin-top: 5px;
+  background-color: #ee742e; /* Dark orange background color */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.submenu li {
+  margin-top: 5px;
+}
+
+.submenu li a {
+  color: #fff;
+  padding: 5px 10px;
+  display: block;
+  text-decoration: none;
+}
+
+.submenu li a:hover {
+  background-color: #4b4040;
+  color: #ecc183;
+  border-radius: 5px;
+}
+
+/* Customer Registration Form Styling */
+.customer-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  
+  margin-top: 20px;
+}
+
+.customer-form input,
+.customer-form select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.customer-form button {
+  background-color: #FFA500;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.customer-form button:hover {
+  background-color: #e59400;
+}
+
+/* Flexbox utility */
+.d-flex {
+  display: flex;
+}
+
+/* Customer Registration Form */
+.customer-registration-form {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.customer-registration-form h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.customer-registration-form .form-group {
+  margin-bottom: 15px;
+}
+
+.customer-registration-form .form-group label {
+  display: block;
+  font-weight: bold;
+}
+
+.customer-registration-form .form-group input,
+.customer-registration-form .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.customer-registration-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.customer-registration-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Customer Search Styling */
+.customer-search {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.customer-search h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.customer-search .form-group {
+  margin-bottom: 15px;
+}
+
+.customer-search .form-group label {
+  font-weight: bold;
+}
+
+.customer-search .form-group input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.customer-search button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.customer-search button:hover {
+  background-color: #0056b3;
+}
+
+/* Search Results */
+.search-results {
+  margin-top: 20px;
+}
+
+.search-results .list-group {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.search-results .list-group-item {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.search-results .list-group-item strong {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.search-results .list-group-item span {
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.search-results p {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #777;
+}
+
+/* Next Button */
+.next-button {
+  display: block;
+  margin: 20px auto 0 auto;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* Sidebar font size adjustments */
+.sidebar ul li a,
+.sidebar ul li button {
+  font-size: 0.85rem; /* Adjust as needed */
+  font-weight: normal;
+}
+
+.sidebar ul li ul.submenu li a,
+.sidebar ul li ul.submenu li button {
+  font-size: 0.75rem; /* Smaller font for submenu items */
+  font-weight: normal;
+}
+
+.sidebar ul li {
+  margin-bottom: 5px; /* Reduce spacing between main menu items */
+}
+
+.sidebar ul li ul.submenu li {
+  margin-bottom: 3px; /* Reduce spacing between submenu items */
+}
+
+.sidebar ul {
+  padding-left: 0; /* Remove extra left padding */
+}
+
+.sidebar ul li ul.submenu {
+  padding-left: 10px; /* Optional: Indent submenus slightly */
+}
+
+/* Centering content */
+.centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to the top */
+  height: 100%; /* Full container height */
+  text-align: center;
+  padding-top: 2rem; /* Adjust to move content down */
+}
+
+
+/* Remove underline from sidebar menu links */
+/* Remove underline from sidebar menu links */
+/* Remove underline from sidebar menu links */
+/* Remove underline from all sidebar menu links */
+/* Remove underline and borders for all sidebar menu links */
+/* Remove underline and borders for all sidebar menu links */
+/* Force remove underline for sidebar links */
+/* Remove underline from sidebar menu links */
+.sidebar a {
+  text-decoration: none !important;
+}
+
+/* Optionally, you can add hover effects to change the appearance when the user hovers over the menu item */
+.sidebar a:hover {
+  text-decoration: none !important;
+  color: #f8f9fa; /* Change this to the color you prefer on hover */
+}
+
+
+/* Remove underline from all submenu buttons */
+.sidebar .submenu button {
+  text-decoration: none !important;
+  background: none !important;  /* Removes any background styling */
+  border: none !important;  /* Removes any border */
+  color: white !important;  /* Ensures the text remains white */
+}
+
+/* Ensure there is no underline on hover for submenu buttons */
+.sidebar .submenu button:hover {
+  text-decoration: none !important;
+  background: none !important;
+}
+
+/* Remove underline and ensure no styling conflicts for all sidebar links */
+.sidebar a {
+  text-decoration: none !important;
+  color: white !important;
+}
+
+/* Remove underline on hover for all sidebar links */
+.sidebar a:hover {
+  text-decoration: none !important;
+  background-color: transparent;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Add this to your CSS file */
+.search-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 1.2rem;
+}
+
+.search-button:disabled {
+  background-color: #cccccc;
+}
+
+
+
+
+
+
+
+
+
+/* Add a border to each row */
+tbody tr {
+  border: 2px solid transparent;
+  transition: border 0.3s ease;
+}
+
+/* On hover, change the border color */
+tbody tr:hover {
+  border: 2px solid #007bff; /* Change to the color you prefer */
+  background-color: #f1f1f1; /* Optional background color change */
+}
+
+
+/* Add this to your custom styles */
+
+/* Apply to all table rows */
+.table-row-hover {
+  transition: border 0.3s ease, background-color 0.3s ease;
+  border: 2px solid transparent; /* Transparent border for initial state */
+}
+
+/* Hover effect: change border and background color */
+.table-row-hover:hover {
+  border: 2px solid #007bff; /* Change to the color you prefer */
+  background-color: #f1f1f1;  /* Optional background color on hover */
+}
+
+
+
+.hiddenColumn {
+  display: none;
+}

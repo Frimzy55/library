@@ -1,0 +1,55 @@
+/* src/MainPage.css */
+.sidebar-link {
+    color: #f5eeee; /* Default text color */
+    text-decoration: none; /* Remove underline */
+    padding: 8px 12px; /* Add padding for better spacing */
+    display: block; /* Make the link a block element */
+    border-radius: 4px; /* Add rounded corners */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+  }
+  
+  .sidebar-link:hover {
+    background-color: #f08b07; /* Light green background on hover */
+    color: white; /* White text on hover */
+  }
+  
+  .sidebar-link .fa-icon {
+    margin-right: 8px; /* Add spacing between icon and text */
+  }
+
+
+  .due-books-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    background: white;
+    color: black;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    width: 250px;
+    padding: 10px;
+    z-index: 10;
+  }
+  
+  .due-books-dropdown .dropdown-content {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .due-books-dropdown ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .due-books-dropdown li {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+
+  
+
+
+
+
+  /* Custom Scrollbar */
