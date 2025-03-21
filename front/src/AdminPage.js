@@ -7,12 +7,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { motion } from "framer-motion";
-import { useNavigate } from 'react-router-dom'; // ✅ Import useNavigate
+import { useLocation, useNavigate } from 'react-router-dom'; // ✅ Import useLocation and useNavigate
 
-function Dashboard() {
+function AdminPage() {
+  const location = useLocation();
   const navigate = useNavigate(); // Use navigate for redirection
   const [message, setMessage] = useState('');
   const [username, setUsername] = useState('');
+
   const [stats, setStats] = useState({
     totalBooks: 0,
     borrowedBooks: 0,
@@ -42,19 +44,15 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const storedUsername = localStorage.getItem('username'); // Retrieve the username
+    const role = localStorage.getItem('role');
 
-    if (!token || !storedUsername) {
+    if (!token || role !== 'admin') {
       navigate('/');
       return;
     }
 
-    // Set the username in the state
-    setUsername(storedUsername);
-
-    // Fetch dashboard data
     axios
-      .get('http://localhost:5002/dashboard', {
+      .get('http://localhost:5002/admin', {
         headers: { Authorization: token },
       })
       .then((res) => setMessage(res.data.message))
@@ -64,7 +62,6 @@ function Dashboard() {
   return (
     <div className="container-fluid px-3 py-4">
       <h4 className="mb-4 fw-bold text-dark text-center">Library Overview</h4>
-      <p className="ml-2 mb-0">{username}!</p>
       
       <div className="row g-3">
         {[
@@ -171,4 +168,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default AdminPage;

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Children } from "react";
 import axios from "axios";
-import Dashboard from "./Dashboard";
+//import Dashboard from "./Dashboard";
+import ChildrenDashBoard from "./ChildrenDashBoard";
 
 import ClientManagement from "./ClientManagement";
 import BooksManagement from "./BooksManagement";
@@ -17,8 +18,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./MainPage.css";
 import { useNavigate } from "react-router-dom";
+import MainPage from "./MainPage";
 
-function MainPage() {
+function ChildrenMain() {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
   const [dueCount, setDueCount] = useState(0);
@@ -174,7 +176,7 @@ function MainPage() {
             }} 
             className="hover-scale"
           />
-           <p className="ml-2 mb-0">{username}!</p>
+           <p className="ml-2 mb-0">{username }</p>
         </div>
       </div>
    
@@ -228,7 +230,7 @@ function MainPage() {
           height: "calc(100vh - 60px)",
           backgroundColor: " #f5f6fa"
         }}>
-          {selectedMenu === "dashboard" && <Dashboard />}
+          {selectedMenu === "dashboard" && <ChildrenDashBoard />}
           
           {selectedMenu === "books-management" && <BooksManagement />}
           
@@ -245,4 +247,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default ChildrenMain;

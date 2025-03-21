@@ -16,7 +16,7 @@ const ClientBorrowingHistory = () => {
     setError("");
 
     axios
-      .get("http://localhost:5000/api/borrowing-history")
+      .get("http://localhost:5002/api/borrowing-history")
       .then((response) => {
         setBorrowingHistory(response.data);
       })

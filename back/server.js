@@ -1,34 +1,213 @@
 
+require('dotenv').config();
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const router = express.Router();
 
 const app = express();
-const port = 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from your frontend
+  credentials: true,
+}));
 app.use(bodyParser.json());
 
-// MySQL Connection
+// JWT Secret Key
+const SECRET_KEY = process.env.JWT_SECRET || 'your_secret_key';
+
+// MySQL Database Connection
 const db = mysql.createConnection({
-  host: 'localhost', // Replace with your MySQL host
+  host: 'localhost',
   user: 'root', // Replace with your MySQL username
   password: 'CSS2244', // Replace with your MySQL password
-  database: 'library_db', // Replace with your database name
+  database: 'library_db',
 });
 
+// Connect to MySQL
 db.connect((err) => {
   if (err) {
-    console.error('Error connecting to MySQL:', err);
+    console.error('Database connection failed:', err);
   } else {
-    console.log('Connected to MySQL database');
+    console.log('Connected to MySQL database.');
   }
 });
 
-// API Endpoint to Add a New Book
+
+app.post('/signup', async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  // Validate input
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
+
+  // Check if the email already exists
+  const checkEmailQuery = 'SELECT * FROM users1 WHERE email = ?';
+  db.query(checkEmailQuery, [email], async (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    if (results.length > 0) {
+      return res.status(400).json({ message: 'Email already exists.' });
+    }
+
+    // Hash the password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Insert the new user into the database
+    const insertUserQuery = 'INSERT INTO users1 (username, email, password, role) VALUES (?, ?, ?, ?)';
+    db.query(insertUserQuery, [name, email, hashedPassword, role], (err, results) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ message: 'Database error' });
+      }
+
+      // Send success response
+      res.status(201).json({ message: 'User registered successfully!' });
+    });
+  });
+});
+
+
+app.get('/users', (req, res) => {
+  db.query('SELECT id, username, email, role, created_at FROM users1', (err, results) => {
+    if (err) {
+      console.error('Error fetching users:', err);
+      return res.status(500).json({ error: 'Failed to fetch users' });
+    }
+    res.json(results);
+  });
+});
+
+
+// API to delete a user
+app.delete('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  db.query('DELETE FROM users1 WHERE id = ?', [userId], (err, results) => {
+    if (err) {
+      console.error('Error deleting user:', err);
+      return res.status(500).json({ error: 'Failed to delete user' });
+    }
+    res.json({ message: 'User deleted successfully' });
+  });
+});
+
+// API to update a user
+app.put('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  const { username, email, role } = req.body;
+  db.query(
+    'UPDATE users1 SET username = ?, email = ?, role = ? WHERE id = ?',
+    [username, email, role, userId],
+    (err, results) => {
+      if (err) {
+        console.error('Error updating user:', err);
+        return res.status(500).json({ error: 'Failed to update user' });
+      }
+      res.json({ message: 'User updated successfully' });
+    }
+  );
+});
+
+
+
+// Login Endpoint
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  // Validate input
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password are required.' });
+  }
+
+  // Query the database for the user
+  const query = 'SELECT * FROM users1 WHERE username = ?';
+  db.query(query, [username], async (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    // Check if user exists
+    if (results.length === 0) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    const user = results[0];
+
+    // Compare passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, username: user.username, role: user.role },
+      SECRET_KEY,
+      { expiresIn: '1h' }
+    );
+
+    // Send response with token and user details
+    res.json({ token, username: user.username, role: user.role });
+  });
+});
+
+// Middleware: Verify JWT Token
+function verifyToken(req, res, next) {
+  const token = req.headers['authorization'];
+  if (!token) {
+    return res.status(403).json({ message: 'Access denied. No token provided.' });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Invalid or expired token.' });
+    }
+    req.user = decoded; // Attach decoded user data to the request object
+    next();
+  });
+}
+
+// Middleware: Restrict to Admins
+function requireAdmin(req, res, next) {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Access denied. Admins only.' });
+  }
+  next();
+}
+
+// Protected Route: Dashboard (Available to All Authenticated Users)
+app.get('/dashboard', verifyToken, (req, res) => {
+  res.json({ message: `Welcome ${req.user.username}, this is your dashboard.` });
+});
+
+// Protected Route: Admin Dashboard (Available Only to Admins)
+app.get('/admin', verifyToken, requireAdmin, (req, res) => {
+  res.json({ message: 'Welcome Admin! You have special access.' });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.post("/api/books", (req, res) => {
   const {
     bookTitleStatement,
@@ -511,7 +690,7 @@ app.get('/api/attendance', (req, res) => {
 
 // Start the server
 
-
+const port = process.env.PORT || 5002;
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

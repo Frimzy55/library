@@ -13,7 +13,7 @@ function SearchBooks({ onClose }) {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/books/search?title=${encodeURIComponent(searchTerm)}`
+        `http://localhost:5002/api/books/search?title=${encodeURIComponent(searchTerm)}`
       );
       if (response.ok) {
         const data = await response.json();

@@ -21,7 +21,7 @@ function MembershipRegistration() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/register", formData);
+      const response = await axios.post("http://localhost:5002/register", formData);
       alert(response.data.message);
       setFormData({
         first_name: "",
@@ -158,7 +158,7 @@ function MembershipRegistration() {
 
           <div className="col-12 col-md-6">
             <div className="form-group">
-              <label className="form-label small mb-1">Status</label>
+              <label className="form-label small mb-1"> Member Status </label>
               <select 
                 className="form-select form-select-sm" 
                 name="status" 

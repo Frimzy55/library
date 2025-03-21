@@ -13,7 +13,7 @@ const Notifications = ({ show, onClose }) => {
     if (show) {
       const fetchDueBooks = async () => {
         try {
-          const response = await axios.get("http://localhost:5000/api/due-books");
+          const response = await axios.get("http://localhost:5002/api/due-books");
           setDueBooks(response.data.dueBooks);
           setError("");
         } catch (err) {

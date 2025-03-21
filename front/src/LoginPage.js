@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faUser, faLock } from '@fortawesome/free-solid-svg-icons';
@@ -7,17 +8,18 @@ import {
   Alert,
   // ... other existing Material-UI imports
 } from '@mui/material';
-import logo from "./image/logo.jpeg";
+//import logo from "./image/logo.jpeg";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({ username: '', password: '', form: '' });
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('info');
-  
+
   const navigate = useNavigate();
 
   const handleSnackbarClose = () => {
@@ -28,28 +30,61 @@ function LoginPage() {
     setShowPassword(!showPassword);
   };
 
-  const handleLogin = (e) => {
+  const validateInputs = () => {
+    let isValid = true;
+    const newErrors = { username: '', password: '', form: '' };
+
+    if (!username.trim()) {
+      newErrors.username = 'Username is required.';
+      isValid = false;
+    }
+
+    if (!password.trim()) {
+      newErrors.password = 'Password is required.';
+      isValid = false;
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long.';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    
-    if (!username || !password) {
-      setSnackbarSeverity('warning');
-      setSnackbarMessage('Please fill in both username and password');
-      setOpenSnackbar(true);
+
+    if (!validateInputs()) {
       return;
     }
 
-    if (username === 'admin' && password === '12345') {
-      setSnackbarSeverity('success');
-      setSnackbarMessage('Login successful! Redirecting...');
-      setOpenSnackbar(true);
-      
-      // Navigate after showing the success message
-      setTimeout(() => {
-        navigate('/main');
-      }, 1500);
-    } else {
+    try {
+      const response = await axios.post(
+        'http://localhost:5002/login',
+        { username, password },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      if (response.status === 200) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('username', response.data.username);
+        localStorage.setItem('role', response.data.role);
+
+        // Navigate based on user role
+        if (response.data.role === 'admin') {
+          navigate('/admin');
+        } else if (response.data.role === 'user2') {
+          navigate('/main2'); 
+        } else if (response.data.role==='user3'){
+          navigate('/main3')
+        } else {
+          navigate('/main'); // Default route for other roles
+        }
+      }
+    } catch (error) {
+      setErrors({ ...errors, form: 'Invalid username or password.' });
+      setSnackbarMessage('Login failed. Please check your credentials.');
       setSnackbarSeverity('error');
-      setSnackbarMessage('Invalid credentials. Please try again.');
       setOpenSnackbar(true);
     }
   };
@@ -62,8 +97,6 @@ function LoginPage() {
         background: "hsl(40, 42.90%, 98.60%)",
       }}
     >
-
-      
       <div 
         style={{ 
           width: '100%',
@@ -114,7 +147,7 @@ function LoginPage() {
                 style={{
                   width: '100%',
                   padding: '0.875rem 1rem 0.875rem 2.5rem',
-                  border: '1px solid #e2e8f0',
+                  border: errors.username ? '1px solid red' : '1px solid #e2e8f0',
                   borderRadius: '8px',
                   fontSize: '0.875rem',
                   transition: 'all 0.2s ease',
@@ -127,9 +160,12 @@ function LoginPage() {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
+            {errors.username && (
+              <p style={{ color: 'red', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                {errors.username}
+              </p>
+            )}
           </div>
-
-          
 
           <div className="mb-6">
             <label htmlFor="password" style={{
@@ -158,7 +194,7 @@ function LoginPage() {
                 style={{
                   width: '100%',
                   padding: '0.875rem 1rem 0.875rem 2.5rem',
-                  border: '1px solid #e2e8f0',
+                  border: errors.password ? '1px solid red' : '1px solid #e2e8f0',
                   borderRadius: '8px',
                   fontSize: '0.875rem',
                   transition: 'all 0.2s ease',
@@ -188,8 +224,18 @@ function LoginPage() {
                 <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
               </button>
             </div>
+            {errors.password && (
+              <p style={{ color: 'red', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                {errors.password}
+              </p>
+            )}
           </div>
 
+          {errors.form && (
+            <p style={{ color: 'red', fontSize: '0.875rem', textAlign: 'center', marginBottom: '1rem' }}>
+              {errors.form}
+            </p>
+          )}
           <button 
             type="submit" 
             style={{
@@ -241,7 +287,7 @@ function LoginPage() {
         </div>
       </div>
 
-       <Snackbar
+      <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}

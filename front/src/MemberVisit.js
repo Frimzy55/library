@@ -30,7 +30,7 @@ function MemberVisit() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`http://localhost:5000/api/members?search=${searchTerm}`);
+      const response = await axios.get(`http://localhost:5002/api/members?search=${searchTerm}`);
       setMembers(response.data);
     } catch (err) {
       setError(err.response?.data?.error || 'Error fetching members');
@@ -61,7 +61,7 @@ function MemberVisit() {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/visits', {
+      await axios.post('http://localhost:5002/api/visits', {
         member_id: selectedMember.member_id,
         full_name: `${selectedMember.first_name} ${selectedMember.last_name}`,
         check_in_date: checkInDate,
@@ -81,7 +81,7 @@ function MemberVisit() {
     setLoadingAttendance(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:5000/api/attendance');
+      const response = await axios.get('http://localhost:5002/api/attendance');
       setAttendanceRecords(response.data);
       setShowAttendance(!showAttendance);
     } catch (err) {

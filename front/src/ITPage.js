@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Dashboard from "./Dashboard";
+import ITDashboard from "./ITDashboard";
 
 import ClientManagement from "./ClientManagement";
 import BooksManagement from "./BooksManagement";
@@ -18,7 +18,7 @@ import {
 import "./MainPage.css";
 import { useNavigate } from "react-router-dom";
 
-function MainPage() {
+function ITPage() {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
   const [dueCount, setDueCount] = useState(0);
@@ -195,11 +195,10 @@ function MainPage() {
             <ul className="nav flex-column">
               {[
                 { id: "dashboard", label: "Dashboard", icon: faTachometerAlt },
-                { id: "books-management", label: "Books Management", icon: faBook },
+                { id: "Infrastructure-management", label: "Hardware & IT Infrastructure", icon: faBook },
                 { id: "members-management", label: "Client Management", icon: faUsers },
                 { id: "Member-Visit-Tracking-Attendance", label: "Member Visit & Attendance", icon: faCog },
-                { id: "borrow-return", label: "Borrow & Return", icon: faExchangeAlt },
-                { id: "report-analysis", label: "Report & Analysis", icon: faChartLine },
+               
                
                 { id: "logout", label: "Logout", icon: faSignOutAlt },
               ].map((item) => (
@@ -228,9 +227,9 @@ function MainPage() {
           height: "calc(100vh - 60px)",
           backgroundColor: " #f5f6fa"
         }}>
-          {selectedMenu === "dashboard" && <Dashboard />}
+          {selectedMenu === "dashboard" && <ITDashboard />}
           
-          {selectedMenu === "books-management" && <BooksManagement />}
+          {selectedMenu === "Infrastructure-management" && <BooksManagement />}
           
           {selectedMenu === "members-management" && <ClientManagement />}
           {selectedMenu === "Member-Visit-Tracking-Attendance" && <MemberVisit/>}
@@ -245,4 +244,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default ITPage;

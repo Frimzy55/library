@@ -9,7 +9,7 @@ function MembershipManagement() {
   const fetchMembers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/api/view");
+      const response = await axios.get("http://localhost:5002/api/view");
       setMembers(response.data);
       setError("");
     } catch (err) {

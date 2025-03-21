@@ -32,7 +32,7 @@ function BorrowReturn() {
     setLoadingMembers(true);
     setErrorMembers("");
     try {
-      const response = await axios.get(`http://localhost:5000/api/members?search=${searchQuery}`);
+      const response = await axios.get(`http://localhost:5002/api/members?search=${searchQuery}`);
       setFilteredMembers(response.data);
       if (response.data.length === 0) setErrorMembers("No members found.");
     } catch (err) {
@@ -51,7 +51,7 @@ function BorrowReturn() {
     setLoadingBooks(true);
     setErrorBooks("");
     try {
-      const response = await axios.get(`http://localhost:5000/api/books?search=${searchBookQuery}`);
+      const response = await axios.get(`http://localhost:5002/api/books?search=${searchBookQuery}`);
       setFilteredBooks(response.data);
       if (response.data.length === 0) setErrorBooks("No books found.");
     } catch (err) {

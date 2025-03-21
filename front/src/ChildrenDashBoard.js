@@ -9,7 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom'; // ✅ Import useNavigate
 
-function Dashboard() {
+function ChildrenDashboard() {
   const navigate = useNavigate(); // Use navigate for redirection
   const [message, setMessage] = useState('');
   const [username, setUsername] = useState('');
@@ -64,7 +64,7 @@ function Dashboard() {
   return (
     <div className="container-fluid px-3 py-4">
       <h4 className="mb-4 fw-bold text-dark text-center">Library Overview</h4>
-      <p className="ml-2 mb-0">{username}!</p>
+      <p className="ml-2 mb-0">Hello {username} Welcome to Children!</p>
       
       <div className="row g-3">
         {[
@@ -171,4 +171,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default ChildrenDashboard;

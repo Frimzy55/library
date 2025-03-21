@@ -20,8 +20,8 @@ function IssueReturn({ onClose }) {
 
     try {
       const endpoint = formData.actionType === 'issue' 
-        ? 'http://localhost:5000/api/books/issue' 
-        : 'http://localhost:5000/api/books/return';
+        ? 'http://localhost:5002/api/books/issue' 
+        : 'http://localhost:5002/api/books/return';
 
       const response = await fetch(endpoint, {
         method: 'PUT',

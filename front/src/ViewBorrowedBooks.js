@@ -16,7 +16,7 @@ function ViewBorrowedBooks() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get("http://localhost:5000/api/borrowed-books");
+      const response = await axios.get("http://localhost:5002/api/borrowed-books");
       setBorrowedBooks(response.data);
     } catch (error) {
       setError("Failed to fetch borrowed books. Please try again.");

@@ -12,7 +12,7 @@ const DueBooksList = () => {
   useEffect(() => {
     const fetchDueCount = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/due-books-count");
+        const response = await axios.get("http://localhost:5002/api/due-books-count");
         setDueCount(response.data.dueCount);
       } catch (error) {
         console.error("Error fetching due books count:", error);
@@ -24,7 +24,7 @@ const DueBooksList = () => {
 
   const fetchDueBooks = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/due-books");
+      const response = await axios.get("http://localhost:5002/api/due-books");
       setDueBooks(response.data.dueBooks);
       setShowDueBooks(!showDueBooks);
     } catch (error) {

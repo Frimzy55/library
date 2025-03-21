@@ -9,7 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom'; // ✅ Import useNavigate
 
-function Dashboard() {
+function AdultDashboard() {
   const navigate = useNavigate(); // Use navigate for redirection
   const [message, setMessage] = useState('');
   const [username, setUsername] = useState('');
@@ -171,4 +171,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default AdultDashboard;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Dashboard from "./Dashboard";
+import AdultDashBoard from "./AdultDashBoard";
 
 import ClientManagement from "./ClientManagement";
 import BooksManagement from "./BooksManagement";
@@ -18,7 +18,7 @@ import {
 import "./MainPage.css";
 import { useNavigate } from "react-router-dom";
 
-function MainPage() {
+function AdultMain() {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
   const [dueCount, setDueCount] = useState(0);
@@ -29,7 +29,7 @@ function MainPage() {
   useEffect(() => {
     const fetchDueCount = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/due-books-count");
+        const response = await axios.get("http://localhost:5002/api/due-books-count");
         setDueCount(response.data.dueCount);
       } catch (error) {
         console.error("Error fetching due books count:", error);
@@ -195,7 +195,7 @@ function MainPage() {
             <ul className="nav flex-column">
               {[
                 { id: "dashboard", label: "Dashboard", icon: faTachometerAlt },
-                { id: "books-management", label: "Books Management", icon: faBook },
+                { id: "books-management", label: " Books Management", icon: faBook },
                 { id: "members-management", label: "Client Management", icon: faUsers },
                 { id: "Member-Visit-Tracking-Attendance", label: "Member Visit & Attendance", icon: faCog },
                 { id: "borrow-return", label: "Borrow & Return", icon: faExchangeAlt },
@@ -228,7 +228,7 @@ function MainPage() {
           height: "calc(100vh - 60px)",
           backgroundColor: " #f5f6fa"
         }}>
-          {selectedMenu === "dashboard" && <Dashboard />}
+          {selectedMenu === "dashboard" && <AdultDashBoard />}
           
           {selectedMenu === "books-management" && <BooksManagement />}
           
@@ -245,4 +245,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default AdultMain;

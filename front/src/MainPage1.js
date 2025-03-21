@@ -17,8 +17,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./MainPage.css";
 import { useNavigate } from "react-router-dom";
+import MainPage from "./MainPage";
 
-function MainPage() {
+function MainPage1() {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
   const [dueCount, setDueCount] = useState(0);
@@ -245,4 +246,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default MainPage1;

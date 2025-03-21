@@ -1,4 +1,5 @@
 // src/BooksManagement.js
+//import React, { useState } from 'react';
 import React, { useState, useEffect } from "react";
 import AddBookForm from './AddBookForm'; // Import the AddBookForm component
 import BooksTable from './BooksTable'; // Import the BooksTable component
@@ -8,15 +9,15 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function BooksManagement() {
-   const navigate = useNavigate();
+     const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false); // State to control form visibility
   const [showBooks, setShowBooks] = useState(false); // State to control book display
   const [books, setBooks] = useState([]); // State to store books data
   const [showSearch, setShowSearch] = useState(false); // State to control search display
   const [showReturn, setShowReturn] = useState(false); 
-   const [username, setUsername] = useState('');
-    const [message, setMessage] = useState('');
-  
+  const [username, setUsername] = useState('');
+      const [message, setMessage] = useState('');
+    
 
   const [formData, setFormData] = useState({
     title: '',
@@ -31,27 +32,24 @@ function BooksManagement() {
   });
 
 
+
+
   useEffect(() => {
-      const token = localStorage.getItem('token');
-      const storedUsername = localStorage.getItem('username'); // Retrieve the username
-  
-      if (!token || !storedUsername) {
-        navigate('/');
-        return;
-      }
-  
-      // Set the username in the state
-      setUsername(storedUsername);
-  
-      // Fetch dashboard data
-      axios
-        .get('http://localhost:5002/dashboard', {
-          headers: { Authorization: token },
-        })
-        .then((res) => setMessage(res.data.message))
-        .catch(() => navigate('/'));
-    }, [navigate]);
-  
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+
+    if (!token || role !== 'admin') {
+      navigate('/');
+      return;
+    }
+
+    axios
+      .get('http://localhost:5002/admin', {
+        headers: { Authorization: token },
+      })
+      .then((res) => setMessage(res.data.message))
+      .catch(() => navigate('/'));
+  }, [navigate]);
 
   // Fetch books from the API
   const fetchBooks = async () => {
@@ -117,12 +115,14 @@ function BooksManagement() {
 
   return (
     <div className="container mt-4">
-      <h2> Books Management</h2>
+      <h2>  Books Management</h2>
 
       {/* Display buttons only if the form, book list, and search are not shown */}
       {!showForm && !showBooks && !showSearch && (
         <div className="d-flex flex-column gap-3">
-          
+          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+           Add New Books
+          </button>
           <button className="btn btn-secondary" onClick={fetchBooks}>
             View All Books
           </button>
