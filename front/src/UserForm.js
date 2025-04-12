@@ -6,7 +6,8 @@ const UserForm = () => {
         name: '',
         email: '',
         password: '',
-        role: 'user'
+        role: 'user',
+        image: null // Add image field to form data
     });
     const [message, setMessage] = useState('');
 
@@ -18,11 +19,34 @@ const UserForm = () => {
         }));
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setFormData(prevState => ({
+            ...prevState,
+            image: file
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form submitted with data:', formData);
+
+        // Create FormData object to handle file upload
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('email', formData.email);
+        data.append('password', formData.password);
+        data.append('role', formData.role);
+        if (formData.image) {
+            data.append('image', formData.image);
+        }
+
         try {
-            const response = await axios.post("http://localhost:5002/signup", formData);
+            const response = await axios.post("http://localhost:5002/signup", data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data' // Set content type for file upload
+                }
+            });
             setMessage('Registration successful!');
             console.log('Registration successful:', response.data);
         } catch (error) {
@@ -72,8 +96,16 @@ const UserForm = () => {
                 >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
-                    
                 </select>
+            </div>
+            <div>
+                <label>Profile Image:</label>
+                <input
+                    type="file"
+                    name="image"
+                    onChange={handleFileChange}
+                    accept="image/*" // Accept only image files
+                />
             </div>
             <button type="submit">Register</button>
             {message && <p>{message}</p>}
@@ -81,4 +113,4 @@ const UserForm = () => {
     );
 };
 
-export default UserForm;
+export default UserForm

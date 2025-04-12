@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Dashboard from "./Dashboard";
-
 import ClientManagement from "./ClientManagement";
 import BooksManagement from "./BooksManagement";
-
 import BorrowReturn from "./BorrowReturn";
-import MemberVisit from './MemberVisit'
+import MemberVisit from './MemberVisit';
 import ReportAnalysis from "./ReportAnalysis";
 import logo from "./image/logo.jpeg";
 import Admin from './Admin';
+import ChangePassword from "./ChangePassword"; // Import the new component
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTachometerAlt, faBook, faUsers, faExchangeAlt, faChartLine,
-  faCog, faUserCog, faSignOutAlt, faUserCircle, faBell
+  faCog, faUserCog, faSignOutAlt, faUserCircle, faBell, faKey
 } from "@fortawesome/free-solid-svg-icons";
 import "./MainPage.css";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +22,7 @@ function MainPage() {
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
   const [dueCount, setDueCount] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
-   const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -43,11 +42,6 @@ function MainPage() {
     fetchDueCount();
     return () => clearInterval(timer);
   }, []);
-
-  /*const handleMenuClick = (menu) => {
-    setSelectedMenu(menu);
-  };*/
-
 
   const handleMenuClick = (menu) => {
     if (menu === "logout") {
@@ -78,8 +72,6 @@ function MainPage() {
     return date.toLocaleTimeString('en-US', options);
   };
 
-
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedUsername = localStorage.getItem('username'); // Retrieve the username
@@ -101,12 +93,11 @@ function MainPage() {
       .catch(() => navigate('/'));
   }, [navigate]);
 
-
   return (
     <div className="d-flex flex-column vh-100">
       <div
         style={{
-          backgroundColor: "hsl(29, 92.90%, 55.90%)",
+          backgroundColor: "linear-gradient(45deg, #f6c23e, #dda20a)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -164,17 +155,11 @@ function MainPage() {
             )}
           </div>
           
-          <FontAwesomeIcon 
-            icon={faUserCircle} 
-            style={{ 
-              color: "white", 
-              fontSize: "30px", 
-              cursor: "pointer",
-              transition: "transform 0.2s",
-            }} 
-            className="hover-scale"
-          />
-           <p className="ml-2 mb-0">{username}!</p>
+          {/* User Profile */}
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", padding: "8px 12px", borderRadius: "8px", backgroundColor: "rgba(93, 83, 136, 0.69)", transition: "background-color 0.3s ease" }}>
+            <FontAwesomeIcon icon={faUserCircle} style={{ color: "white", fontSize: "32px", filter: "drop-shadow(0 2px 4px rgba(53, 29, 187, 0.72))" }} />
+            <p style={{ color: "white", margin: 0, fontWeight: "600", fontSize: "16px", letterSpacing: "0.5px" }}>{username}</p>
+          </div>
         </div>
       </div>
    
@@ -200,7 +185,7 @@ function MainPage() {
                 { id: "Member-Visit-Tracking-Attendance", label: "Member Visit & Attendance", icon: faCog },
                 { id: "borrow-return", label: "Borrow & Return", icon: faExchangeAlt },
                 { id: "report-analysis", label: "Report & Analysis", icon: faChartLine },
-               
+                { id: "change-password", label: "Change Password", icon: faKey }, // New menu item
                 { id: "logout", label: "Logout", icon: faSignOutAlt },
               ].map((item) => (
                 <li className="nav-item" key={item.id}>
@@ -229,15 +214,12 @@ function MainPage() {
           backgroundColor: " #f5f6fa"
         }}>
           {selectedMenu === "dashboard" && <Dashboard />}
-          
           {selectedMenu === "books-management" && <BooksManagement />}
-          
           {selectedMenu === "members-management" && <ClientManagement />}
           {selectedMenu === "Member-Visit-Tracking-Attendance" && <MemberVisit/>}
           {selectedMenu === "borrow-return" && <BorrowReturn />}
           {selectedMenu === "report-analysis" && <ReportAnalysis/>}
-          
-        
+          {selectedMenu === "change-password" && <ChangePassword />} {/* Render ChangePassword component */}
           {selectedMenu === "logout" && null}
         </div>
       </div>

@@ -16,7 +16,7 @@ function ManageUser() {
   // Fetch all users from the backend API
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:5002/users'); // Replace with your API endpoint
+      const response = await fetch('http://localhost:5002/users');
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -89,6 +89,7 @@ function ManageUser() {
         <thead>
           <tr>
             <th>ID</th>
+            <th>Profile Image</th>
             <th>Username</th>
             <th>Email</th>
             <th>Role</th>
@@ -100,6 +101,15 @@ function ManageUser() {
           {users.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
+              <td>
+                {user.image && (
+                  <img
+                    src={`http://localhost:5002/${user.image}`} // Serve image from the backend
+                    alt="Profile"
+                    style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
+                  />
+                )}
+              </td>
               <td>{user.username}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>

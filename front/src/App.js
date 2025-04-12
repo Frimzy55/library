@@ -10,6 +10,7 @@ import AdminMain from './AdminMain';
 //import MainPage1 from './MainPage1';
 import ChildrenMain from './ChildrenMain';
 import AdultMain from './AdultMain';
+import HrMainpage from './HrMainpage';
 
 
 
@@ -26,6 +27,7 @@ function App() {
         
         <Route path='/main2' element={<ChildrenMain/>}/>
         <Route path='/main3' element={<ITPage/>}/>
+        <Route path='/hr' element={<HrMainpage/>}/>
         
         
         <Route path="books-management" element={<BooksManagement />} />

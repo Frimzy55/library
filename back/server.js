@@ -5,7 +5,11 @@ const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const multer = require("multer");
 const bodyParser = require('body-parser');
+const path = require("path");
+const router = express.Router();
+
 
 const app = express();
 
@@ -37,24 +41,42 @@ db.connect((err) => {
 });
 
 
-app.post('/signup', async (req, res) => {
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Save files to the 'uploads' folder
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname)); // Unique filename
+  },
+});
+
+// Initialize multer with the storage configuration
+const upload = multer({ storage });
+
+// Serve static files from the 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Signup route with image upload
+app.post("/signup", upload.single("image"), async (req, res) => {
   const { name, email, password, role } = req.body;
+  const imagePath = req.file ? req.file.path : null; // Get the uploaded file path
 
   // Validate input
   if (!name || !email || !password || !role) {
-    return res.status(400).json({ message: 'All fields are required.' });
+    return res.status(400).json({ message: "All fields are required." });
   }
 
   // Check if the email already exists
-  const checkEmailQuery = 'SELECT * FROM users1 WHERE email = ?';
+  const checkEmailQuery = "SELECT * FROM users1 WHERE email = ?";
   db.query(checkEmailQuery, [email], async (err, results) => {
     if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ message: 'Database error' });
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "Database error" });
     }
 
     if (results.length > 0) {
-      return res.status(400).json({ message: 'Email already exists.' });
+      return res.status(400).json({ message: "Email already exists." });
     }
 
     // Hash the password
@@ -62,22 +84,27 @@ app.post('/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // Insert the new user into the database
-    const insertUserQuery = 'INSERT INTO users1 (username, email, password, role) VALUES (?, ?, ?, ?)';
-    db.query(insertUserQuery, [name, email, hashedPassword, role], (err, results) => {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(500).json({ message: 'Database error' });
-      }
+    const insertUserQuery =
+      "INSERT INTO users1 (username, email, password, role, image) VALUES (?, ?, ?, ?, ?)";
+    db.query(
+      insertUserQuery,
+      [name, email, hashedPassword, role, imagePath],
+      (err, results) => {
+        if (err) {
+          console.error("Database error:", err);
+          return res.status(500).json({ message: "Database error" });
+        }
 
-      // Send success response
-      res.status(201).json({ message: 'User registered successfully!' });
-    });
+        // Send success response
+        res.status(201).json({ message: "User registered successfully!" });
+      }
+    );
   });
 });
 
 
 app.get('/users', (req, res) => {
-  db.query('SELECT id, username, email, role, created_at FROM users1', (err, results) => {
+  db.query('SELECT id, username, email, role, image, created_at FROM users1', (err, results) => {
     if (err) {
       console.error('Error fetching users:', err);
       return res.status(500).json({ error: 'Failed to fetch users' });
@@ -197,6 +224,8 @@ app.get('/admin', verifyToken, requireAdmin, (req, res) => {
 
 
 
+//const jwt = require("jsonwebtoken");
+//const bcrypt = require("bcrypt");
 
 
 
@@ -204,9 +233,56 @@ app.get('/admin', verifyToken, requireAdmin, (req, res) => {
 
 
 
+//const jwt = require("jsonwebtoken");
+//const bcrypt = require("bcrypt");
 
+app.post("/change-password", async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const token = req.headers.authorization;
 
+  if (!token) {
+    return res.status(401).json({ message: "No token provided." });
+  }
 
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, "your-secret-key"); // Ensure this matches the signing key
+    const userId = decoded.id;
+
+    // Fetch the user from the database
+    const [user] = await db.query("SELECT * FROM users1 WHERE id = ?", [userId]);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Verify the current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Current password is incorrect." });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password in the database
+    await db.query("UPDATE users1 SET password = ? WHERE id = ?", [hashedPassword, userId]);
+
+    res.status(200).json({ message: "Password changed successfully." });
+  } catch (error) {
+    console.error("Error changing password:", error);
+
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Invalid token." });
+    }
+
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token has expired." });
+    }
+
+    res.status(500).json({ message: "An error occurred." });
+  }
+});
 
 app.post("/api/books", (req, res) => {
   const {
@@ -688,7 +764,161 @@ app.get('/api/attendance', (req, res) => {
   });
 });
 
+
+
+
+
+
+
+
+
+
+
+
+// Fetch all employees with attendance data for the current day
+/*app.get("/employees", (req, res) => {
+  db.query(`
+    SELECT 
+      u.id, 
+      u.username, 
+      u.role, 
+      a.clock_in_time, 
+      a.clock_out_time, 
+      a.status 
+    FROM users1 u 
+    LEFT JOIN attendance a 
+      ON u.id = a.id 
+      AND a.date = CURRENT_DATE
+  `, (err, results) => {
+    if (err) {
+      console.error("Error fetching employees:", err);
+      return res.status(500).json({ error: "Failed to fetch employees" });
+    }
+    res.json(results.rows);
+  });
+});
+
+// Record Clock-In
+app.post("/clock-in", (req, res) => {
+  const { id } = req.body;
+  const date = new Date().toISOString().split("T")[0]; // Current date
+  const clock_in_time = new Date().toISOString();
+
+  // Check if the user has already clocked in today
+  db.query(
+    "SELECT * FROM attendance WHERE id = $1 AND date = $2",
+    [id, date],
+    (err, result) => {
+      if (err) {
+        console.error("Error checking clock-in:", err);
+        return res.status(500).json({ error: "Failed to check clock-in" });
+      }
+
+      if (result.rows.length > 0) {
+        return res.status(400).json({ error: "User has already clocked in today" });
+      }
+
+      // Insert new clock-in record
+      db.query(
+        "INSERT INTO attendance (id, date, clock_in_time, status) VALUES ($1, $2, $3, $4)",
+        [id, date, clock_in_time, "Present"],
+        (err) => {
+          if (err) {
+            console.error("Error recording clock-in:", err);
+            return res.status(500).json({ error: "Failed to record clock-in" });
+          }
+          res.status(201).json({ message: "Clock-in recorded successfully" });
+        }
+      );
+    }
+  );
+});
+
+// Record Clock-Out
+app.post("/clock-out", (req, res) => {
+  const { id } = req.body;
+  const clock_out_time = new Date().toISOString();
+
+  // Check if the user has clocked in today
+  db.query(
+    "SELECT * FROM attendance WHERE id = $1 AND date = $2",
+    [id, new Date().toISOString().split("T")[0]],
+    (err, result) => {
+      if (err) {
+        console.error("Error checking clock-out:", err);
+        return res.status(500).json({ error: "Failed to check clock-out" });
+      }
+
+      if (result.rows.length === 0) {
+        return res.status(400).json({ error: "User has not clocked in today" });
+      }
+
+      // Update clock-out time and status
+      db.query(
+        "UPDATE attendance SET clock_out_time = $1, status = $2 WHERE id = $3 AND date = $4",
+        [clock_out_time, "Clocked Out", id, new Date().toISOString().split("T")[0]],
+        (err) => {
+          if (err) {
+            console.error("Error recording clock-out:", err);
+            return res.status(500).json({ error: "Failed to record clock-out" });
+          }
+          res.status(200).json({ message: "Clock-out recorded successfully" });
+        }
+      );
+    }
+  );
+});
+
+*/
+
+
+app.get('/api/users', (req, res) => {
+  const username = req.query.username;
+  if (!username) {
+    return res.status(400).json({ error: 'Username is required' });
+  }
+
+  const query = 'SELECT * FROM users1 WHERE username = ?';
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(results[0]);
+  });
+});
+
 // Start the server
+
+
+app.post('/api/attendance1', (req, res) => {
+  const {  username, checkInTime, checkOutTime } = req.body;
+
+  if (!userId || !username) {
+    return res.status(400).json({ error: 'Invalid data' });
+  }
+
+  // Insert the data into the attendance table
+  const query = `
+    INSERT INTO attendance1 ( username, check_in_time, check_out_time)
+    VALUES ( ?, ?, ?)
+  `;
+  const values = [userId, username, checkInTime, checkOutTime];
+
+  connection.query(query, values, (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ error: 'Failed to save attendance data' });
+    }
+
+    console.log('Attendance record saved:', results);
+    res.status(200).json({ message: 'Attendance data saved successfully' });
+  });
+});
+
+
 
 const port = process.env.PORT || 5002;
 // Start the server

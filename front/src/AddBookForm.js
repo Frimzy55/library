@@ -72,7 +72,7 @@ function AddBookForm({ formData, onInputChange, onSubmit, onCancel }) {
               required
             />
           </div>
-          <div className="col-md-3 mb-3">
+          <div className="col-md-3 mb-3"> 
             <label htmlFor="publicationDistribution" className="form-label"> Publication Distribution</label>
             <input
               type="text"

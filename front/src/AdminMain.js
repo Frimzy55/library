@@ -145,8 +145,8 @@ function AdminMain() {
           </div>
 
           {/* User Profile */}
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", padding: "8px 12px", borderRadius: "8px", backgroundColor: "rgba(36, 16, 126, 0.69)", transition: "background-color 0.3s ease" }}>
-  <FontAwesomeIcon icon={faUserCircle} style={{ color: "white", fontSize: "32px", filter: "drop-shadow(0 2px 4px rgba(53, 29, 187, 0.72))" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", padding: "8px 12px", borderRadius: "8px", backgroundColor: "rgba(204, 103, 36, 0.69)", transition: "background-color 0.3s ease" }}>
+  <FontAwesomeIcon icon={faUserCircle} style={{ color: "white", fontSize: "32px", filter: "drop-shadow(0 2px 4px rgba(107, 90, 201, 0.72))" }} />
   <p style={{ color: "white", margin: 0, fontWeight: "600", fontSize: "16px", letterSpacing: "0.5px" }}>{username}</p>
 </div>
         </div>

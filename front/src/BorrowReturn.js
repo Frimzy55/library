@@ -78,7 +78,7 @@ function BorrowReturn() {
   return (
     <div className="container-fluid p-4">
       <div className="card shadow-lg">
-        <div className="card-header bg-white text-primary">
+        <div className="card-header bg-white text-dark">
           <h3 className="mb-0"><FaBook className="me-2" />Borrow & Return Management</h3>
         </div>
         
@@ -86,7 +86,7 @@ function BorrowReturn() {
           {/* View Borrowed Books Button */}
           <div className="mb-4">
             <button 
-              className="btn btn-info w-100"
+              className="btn btn-success w-100"
               onClick={() => setShowBorrowedBooks(!showBorrowedBooks)}
             >
               <FaBook className="me-2" />
@@ -97,7 +97,7 @@ function BorrowReturn() {
 
           {/* Borrow Section */}
           <div className="mb-5 p-4 border rounded bg-light">
-            <h4 className="mb-4 text-primary"><FaUser className="me-2" />Borrow Book</h4>
+            <h4 className="mb-4 text-dark"><FaUser className="me-2" />Borrow Book</h4>
             
             {!showBorrowForm ? (
               <>
@@ -105,7 +105,7 @@ function BorrowReturn() {
                   {/* Member Search */}
                   <div className="col-md-6">
                     <div className="card h-100">
-                      <div className="card-header bg-secondary text-white">
+                      <div className="card-header bg-white text-primary">
                         Search Member
                       </div>
                       <div className="card-body">
@@ -156,7 +156,7 @@ function BorrowReturn() {
                   {/* Book Search */}
                   <div className="col-md-6">
                     <div className="card h-100">
-                      <div className="card-header bg-secondary text-white">
+                      <div className="card-header bg-white text-primary">
                         Search Book
                       </div>
                       <div className="card-body">
@@ -262,7 +262,7 @@ function BorrowReturn() {
 
           {/* Return Section */}
           <div className="mt-5 p-4 border rounded bg-light">
-            <h4 className="mb-4 text-danger"><FaExchangeAlt className="me-2" />Return Book</h4>
+            <h4 className="mb-4 text-dark"><FaExchangeAlt className="me-2" />Return Book</h4>
             {!showReturnForm ? (
               <div className="text-center">
                 <button

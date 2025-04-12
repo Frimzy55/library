@@ -77,6 +77,9 @@ function LoginPage() {
           navigate('/main2'); 
         } else if (response.data.role==='user3'){
           navigate('/main3')
+
+        } else if (response.data.role==='Hr'){
+          navigate('/hr')
         } else {
           navigate('/main'); // Default route for other roles
         }

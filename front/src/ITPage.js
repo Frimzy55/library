@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ITDashboard from "./ITDashboard";
-
+import ChangePassword from "./ChangePassword"; // Import the new component
 import ClientManagement from "./ClientManagement";
 import BooksManagement from "./BooksManagement";
 
@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./MainPage.css";
 import { useNavigate } from "react-router-dom";
+import { faKey } from "@fortawesome/free-solid-svg-icons";
 
 function ITPage() {
   const navigate = useNavigate();
@@ -164,17 +165,11 @@ function ITPage() {
             )}
           </div>
           
-          <FontAwesomeIcon 
-            icon={faUserCircle} 
-            style={{ 
-              color: "white", 
-              fontSize: "30px", 
-              cursor: "pointer",
-              transition: "transform 0.2s",
-            }} 
-            className="hover-scale"
-          />
-           <p className="ml-2 mb-0">{username}!</p>
+           {/* User Profile */}
+                              <div style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", padding: "8px 12px", borderRadius: "8px", backgroundColor: "rgba(204, 103, 36, 0.69)", transition: "background-color 0.3s ease" }}>
+                      <FontAwesomeIcon icon={faUserCircle} style={{ color: "white", fontSize: "32px", filter: "drop-shadow(0 2px 4px rgba(41, 15, 189, 0.24))" }} />
+                      <p style={{ color: "white", margin: 0, fontWeight: "600", fontSize: "16px", letterSpacing: "0.5px" }}>{username}</p>
+                    </div>
         </div>
       </div>
    
@@ -198,6 +193,7 @@ function ITPage() {
                 { id: "Infrastructure-management", label: "Hardware & IT Infrastructure", icon: faBook },
                 { id: "members-management", label: "Client Management", icon: faUsers },
                 { id: "Member-Visit-Tracking-Attendance", label: "Member Visit & Attendance", icon: faCog },
+                { id: "change-password", label: "Change Password", icon: faKey },
                
                
                 { id: "logout", label: "Logout", icon: faSignOutAlt },
@@ -235,6 +231,7 @@ function ITPage() {
           {selectedMenu === "Member-Visit-Tracking-Attendance" && <MemberVisit/>}
           {selectedMenu === "borrow-return" && <BorrowReturn />}
           {selectedMenu === "report-analysis" && <ReportAnalysis/>}
+          {selectedMenu === "change-password" && <ChangePassword />}
           
         
           {selectedMenu === "logout" && null}
